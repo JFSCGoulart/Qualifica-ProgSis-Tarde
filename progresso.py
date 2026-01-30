@@ -1,4 +1,5 @@
 from datetime import date
+from progresso_funcoes import *
 from ui import *
 
 # Dados mockados
@@ -14,18 +15,16 @@ aluno_8 = ("Douglas", "Tecnologia", 36, "2026-01-29")
 
 alunos_atividades = [aluno_1, aluno_2, aluno_3, aluno_4, aluno_5, aluno_6, aluno_7, aluno_8]
 
-
-#((total_acertos) / (quantidade_alunos * quantidade_questoes)) * 100
-
 # Menu do coordenador
 while True:
     clear()
-    print(f"Selecione uma opção:")
-    print(f"\n1. Cadastrar novo aluno"
-        f"\n2. Ver ranking das turmas"
-        f"\n3. Ver atividades realizadas"
-        f"\n4. Ver desempenho por curso"
-        f"\n5. Sair")
+    menu_title("Coordenador")
+    print("\nSelecione uma opção:")
+    print("1. Cadastrar novo aluno"
+        "\n2. Ver ranking das turmas"
+        "\n3. Ver atividades realizadas"
+        "\n4. Ver desempenho por curso"
+        "\n5. Sair")
     choice = input("> ")
 
     match choice:
@@ -37,32 +36,33 @@ while True:
             print("Cadastrar novo aluno")
         case "2":
             # Listar nome e pontuação de cada aluno por curso
-            print("\nVer ranking das turma")
             while True:
-                print("\n1. Para ver a lista de alunos e ranking")
-                print("2. Para sair")
-
-                opcao = input("\nAdicione a opção desejada: ")
+                clear()
+                menu_title("Ver ranking das turmas")
+                print(f"\nSelecione uma opção:")
+                print("1. Para ver a lista de alunos e ranking"
+                      "\n2. Voltar")
+                opcao = input("> ")
 
                 match opcao:
                     case "1":
                         if not alunos_atividades:
                             print("Não tem nenhum aluno cadastrado.")
                         else:
-                            ranking = sorted(alunos_atividades, key=lambda estrelhas: estrelhas[2], reverse=True)
-                            print("\n🏆 Ranking de Alunos 🏆")
-                            for item in ranking:
-                                print(f"Nome: {item[0]} | Curso: {item[1]} | Estrelas: {item[2]}")
-
+                            clear()
+                            menu_title("Ranking das turmas")
+                            ranquear_alunos(alunos_atividades, "Comunicação")
+                            ranquear_alunos(alunos_atividades, "Lógica")
+                            ranquear_alunos(alunos_atividades, "Organização no Trabalho")
+                            ranquear_alunos(alunos_atividades, "Tecnologia")
+                                    
+                            call_to_action_clear()
                     case "2":
-                        print("Encerando o programa.")
                         break
-
                     case _:
                         print("Opção inválida.")
-
-            call_to_action_clear()
-            continue
+            if opcao == "2":
+                continue
         case "3":
             # Listar, comparando a data de hoje com a data de quando foi feita a atividade
                 # Por curso
@@ -72,6 +72,7 @@ while True:
         case "4":
             # Segundo menu
                 # Selecionar o curso
+                # ((total_acertos) / (quantidade_alunos * quantidade_questoes)) * 100
             print("\nVer desempenho por curso")
             call_to_action_clear()
             continue
