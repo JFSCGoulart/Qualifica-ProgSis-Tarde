@@ -1,0 +1,55 @@
+#Regras de senha respeitando padrões de segurança atuais
+import re
+import hashlib
+
+def senha_forte(senha):
+    if len(senha) < 8:
+        return False, "A senha deve ter no mínimo 8 caracteres."
+
+    if not re.search(r"[A-Z]", senha):
+        return False, "A senha deve conter pelo menos uma letra maiúscula."
+
+    if not re.search(r"[a-z]", senha):
+        return False, "A senha deve conter pelo menos uma letra minúscula."
+
+    if not re.search(r"[0-9]", senha):
+        return False, "A senha deve conter pelo menos um número."
+
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", senha):
+        return False, "A senha deve conter pelo menos um caractere especial."
+
+    if " " in senha:
+        return False, "A senha não pode conter espaços."
+
+    return True, "Senha válida."
+
+def hash_senha(senha):
+    return hashlib.sha256(senha.encode()).hexdigest()
+
+usuarios = {
+    "admin": hash_senha("Senha@123")
+}
+
+def login(usuario, senha):
+    if usuario not in usuarios:
+        return "Usuário não encontrado."
+
+    senha_hash = hash_senha(senha)
+
+    if usuarios[usuario] == senha_hash:
+        return "Login realizado com sucesso."
+    else:
+        return "Senha incorreta."
+
+def cadastrar_usuario(usuario, senha):
+    valida, msg = senha_forte(senha)
+
+    if not valida:
+        return msg
+
+    usuarios[usuario] = hash_senha(senha)
+    return "Usuário cadastrado com sucesso."
+
+
+print(cadastrar_usuario("joao", "Teste@123"))
+print(login("joao", "Teste@123"))
