@@ -76,12 +76,13 @@ while True:
                         if not alunos_atividades:
                             print("Não tem nenhum aluno cadastrado.")
                         else:
-                            clear()
-                            menu_title("Resumo de Atividades do Dia")
-                            total_atividades_hoje(alunos_atividades, "Comunicação")
-                            total_atividades_hoje(alunos_atividades, "Lógica")
-                            total_atividades_hoje(alunos_atividades, "Organização no Trabalho")
-                            total_atividades_hoje(alunos_atividades, "Tecnologia")
+                            while True:
+                                clear()
+                                menu_title("Resumo de Atividades do Dia")
+                                total_atividades_hoje(alunos_atividades, "Comunicação")
+                                total_atividades_hoje(alunos_atividades, "Lógica")
+                                total_atividades_hoje(alunos_atividades, "Organização no Trabalho")
+                                total_atividades_hoje(alunos_atividades, "Tecnologia")
 
                             call_to_action_clear()
                     case "2":
@@ -90,10 +91,13 @@ while True:
                         print("\nOpção inválida.")
                         call_to_action_clear()
         case "4":
-            # Segundo menu
-                # Selecionar o curso
-                # ((total_acertos) / (quantidade_alunos * quantidade_questoes)) * 100
-            print("\nVer desempenho por curso")
+            clear()
+            menu_title("Ver desempenho por curso")
+            desempenho_por_curso(alunos_atividades, "Comunicação")
+            desempenho_por_curso(alunos_atividades, "Lógica")
+            desempenho_por_curso(alunos_atividades, "Organização no Trabalho")
+            desempenho_por_curso(alunos_atividades, "Tecnologia")
+
             call_to_action_clear()
         case "5":
             break
