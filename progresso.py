@@ -3,15 +3,15 @@ from progresso_funcoes import *
 from ui import *
 
 # Dados mockados
-# Nome | Curso | Estrelhas/Acertos | Dia que fez
-aluno_1 = ("João", "Comunicação", 50, "2026-01-27")
-aluno_2 = ("Maria", "Lógica", 19, "2026-01-29")
-aluno_3 = ("Carla", "Organização no Trabalho", 26, "2026-01-27")
-aluno_4 = ("Adriano", "Comunicação", 10, "2026-01-29")
-aluno_5 = ("Gustavo", "Lógica", 5, "2026-01-27")
-aluno_6 = ("Letícia", "Tecnologia", 18, "2026-01-27")
-aluno_7 = ("Marcos", "Organização no Trabalho", 44, "2026-01-27")
-aluno_8 = ("Douglas", "Tecnologia", 36, "2026-01-29")
+# Nome | Curso | Quantas atividades fez | Estrelhas/Acertos | Dia que fez
+aluno_1 = ("João", "Comunicação", 60, 37, "2026-01-27")
+aluno_2 = ("Maria", "Lógica", 46, 19, "2026-01-29")
+aluno_3 = ("Carla", "Organização no Trabalho", 32, 26, "2026-01-27")
+aluno_4 = ("Adriano", "Comunicação", 18, 10, "2026-01-29")
+aluno_5 = ("Gustavo", "Lógica", 15, 5, "2026-01-27")
+aluno_6 = ("Letícia", "Tecnologia", 20, 18, "2026-01-27")
+aluno_7 = ("Marcos", "Organização no Trabalho", 53, 44, "2026-01-27")
+aluno_8 = ("Douglas", "Tecnologia", 44, 36, "2026-01-29")
 
 alunos_atividades = [aluno_1, aluno_2, aluno_3, aluno_4, aluno_5, aluno_6, aluno_7, aluno_8]
 

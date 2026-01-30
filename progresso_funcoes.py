@@ -1,11 +1,24 @@
 def ranquear_alunos(lista_alunos, nome_curso):
 
     exibiu_menu = False
-    ranking = sorted(lista_alunos, key=lambda estrelhas: estrelhas[2], reverse=True)
+
+
+    alunos_do_curso = [
+        aluno for aluno in lista_alunos if aluno[1] == nome_curso
+    ]
+
+    ranking = sorted(alunos_do_curso, key=lambda aluno: aluno[3], reverse=True)
     
-    for item in ranking:
+    for posicao, item in enumerate(ranking, start=1):
         if item[1] == nome_curso:
             if not exibiu_menu:
                 print(f"\n--- Total de acerto em {nome_curso} ---")
                 exibiu_menu = True
-            print(f"Nome: {item[0]} | Curso: {item[1]} | Estrelas: {item[2]} | Data: {item[3]}")
+            print(
+                f"Posição: {posicao}º | "
+                f"Nome: {item[0]} | "
+                f"Curso: {item[1]} | "
+                f"Questões feitas: {item[2]} | "
+                f"Estrelas (acertos): {item[3]} | "
+                f"Data: {item[4]}"
+            )
