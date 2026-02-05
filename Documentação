@@ -46,6 +46,8 @@ Tecnologias utilizadas
 - Python 3
 - SQlite3
 
+"Lógica: O Script em Phyton foi utilizado para realizar a lógica da aplicação, processamento de dados, consulta ao banco de dados, controle de seção e etc."
+
 
     CREATE TABLE IF NOT EXISTS "usuarios" (
         "id_usuario" INTEGER NOT NULL UNIQUE,
