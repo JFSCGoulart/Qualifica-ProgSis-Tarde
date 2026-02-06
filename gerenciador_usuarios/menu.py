@@ -3,6 +3,8 @@ from gerenciador_usuarios.modelos import Aluno, Coordenador, Professor
 from gerenciador_usuarios.repositorio import (
     buscar_usuario_por_id_e_tipo,
     buscar_usuario_por_tipo,
+    buscar_usuario_por_email,
+    buscar_usuario_por_cpf,
     deletar_usuario,
     inserir_usuario,
 )
@@ -50,6 +52,13 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
             if email is None:
                 step = "nome"
                 continue
+            
+            verificar_email = buscar_usuario_por_email(email)
+                
+            if verificar_email:
+                menu_error_success("Email já cadastrado.")
+                call_to_action_clear()
+                continue
 
             if not validar_email(email):
                 menu_error_success("Email inválido. Tente novamente.")
@@ -74,26 +83,17 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
                 call_to_action_clear()
                 continue
 
+            verificar_cpf = buscar_usuario_por_cpf(cpf_formatado)
+                
+            if verificar_cpf:
+                menu_error_success("CPF já cadastrado.")
+                call_to_action_clear()
+                continue
+
             step = "senha"
 
         elif step == "senha":
-            senha = perguntar(
-                "\nDigite a senha (ou '<' pra voltar): ",
-                secret = True,
-                redraw = render,
-            )
-            if senha is None:
-                step = "cpf"
-                continue
-
-            senha_confirmacao = perguntar(
-                "\nDigite a senha novamente (ou '<' pra voltar): ",
-                secret = True,
-                redraw = render,
-            )
-            if senha_confirmacao is None:
-                step = "senha"
-                continue
+            senha = senha_confirmacao = (nome[:3]) + "@" + (str(cpf_raw)[-4:])
 
             try:
                 novo_user = tipo_cls(
@@ -115,8 +115,10 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
                 clear()
                 menu_error_success("Cadastro realizado com sucesso!")
             elif resultado is False:
+                clear()
                 menu_error_success("CPF ou email já cadastrado")
             else:
+                clear()
                 menu_error_success("Erro crítico ao acessar o banco")
 
             while True:
