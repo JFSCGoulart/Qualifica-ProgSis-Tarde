@@ -1,6 +1,6 @@
-from gerenciador_usuarios.modelos import Aluno, Coordenador, Professor
+from progresso.modelos import Aluno, Coordenador, Professor
 
-from gerenciador_usuarios.repositorio import (
+from progresso.repositorio import (
     buscar_usuario_por_id_e_tipo,
     buscar_usuario_por_tipo,
     buscar_usuario_por_email,
@@ -9,8 +9,8 @@ from gerenciador_usuarios.repositorio import (
     inserir_usuario,
 )
 
-from gerenciador_usuarios.validadores import formatar_cpf, validar_email
-from gerenciador_usuarios.prompts import perguntar
+from progresso.validadores import formatar_cpf, validar_email
+from progresso.prompts import perguntar
 
 from ui import (
     call_to_action_clear,

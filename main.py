@@ -1,4 +1,4 @@
-from gerenciador_usuarios.menu import rodar_menu
+from progresso.menu import rodar_menu
 from banco import conexao
 
 if __name__ == "__main__":

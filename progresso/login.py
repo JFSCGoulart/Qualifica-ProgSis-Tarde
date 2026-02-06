@@ -1,12 +1,12 @@
 from getpass import getpass
 
-from gerenciador_usuarios.repositorio import (
+from progresso.repositorio import (
     buscar_usuario_por_email,
     buscar_usuario_por_cpf,
     atualizar_hash,
 )
-from gerenciador_usuarios.modelos import Usuario
-from gerenciador_usuarios.validadores import formatar_cpf
+from progresso.modelos import Usuario
+from progresso.validadores import formatar_cpf
 
 
 def autenticar(identificador: str, senha_digitada: str):
