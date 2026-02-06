@@ -67,7 +67,7 @@ def render_menu_visualizar_usuario():
     menu_option("4", "Voltar")
 
 
-def render_menu_deletar_usuario():
+def render_menu_remover_usuario():
     menu_title("DELETAR USUÁRIO")
     single_option("Escolha uma opção:")
     menu_option("1", "Alunos")
