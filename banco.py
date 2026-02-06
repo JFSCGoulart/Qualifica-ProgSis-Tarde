@@ -54,4 +54,3 @@ CREATE TABLE IF NOT EXISTS "usuario_atividade" (
 ''')
 
 conexao.commit()
-conexao.close()
