@@ -68,10 +68,28 @@ def buscar_usuario_por_tipo(tipo_num: int):
     return cursor.fetchall()
 
 
-def deletar_usuario(user_id: int) -> str:
-    cursor.execute("DELETE FROM usuarios WHERE id_usuario = ?", (user_id,))
+def buscar_usuario_por_id_e_tipo(user_id: int, tipo_num: int):
+    cursor.execute(
+        """
+        SELECT id_usuario, nome, email, cpf, tipo
+        FROM usuarios
+        WHERE id_usuario = ? AND tipo = ?
+        """,
+        (user_id, tipo_num),
+    )
+    return cursor.fetchone()
+
+
+def deletar_usuario(user_id: int, tipo_num: int) -> bool | None:
+    cursor.execute(
+        "DELETE FROM usuarios WHERE id_usuario = ? AND tipo = ?",
+        (user_id, tipo_num),
+    )
     conexao.commit()
-    return "deletado" if cursor.rowcount == 1 else "nao_encontrado"
+
+    if cursor.rowcount == 1:
+        return True
+    return False
 
 
 def atualizar_hash(user_id: int, novo_hash: str) -> str:
