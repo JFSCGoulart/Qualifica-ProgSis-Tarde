@@ -61,39 +61,6 @@ def criar_tabela():
 	INSERT OR IGNORE INTO usuarios (nome,email,cpf,senha,tipo)
     VALUES ('Admin','coordenacao@escola.br',12345678900,'Adm@8900',2);
 
-	INSERT OR IGNORE INTO usuarios (nome,email,cpf,senha,tipo)
-    VALUES ('João Goulart Mentiroso','prof@gmail.com',10398367909,'Joa@7909',1);
-
-    INSERT OR IGNORE INTO usuarios (nome,email,cpf,senha,tipo)
-    VALUES ('Kiki Alexandre Lima Gonçalves','aluno@gmail.com',04535138185,'Alu@8185',0);
-
-	INSERT OR IGNORE INTO cursos (nome,horario)
-    VALUES ('Programação',1);
-
-    INSERT OR IGNORE INTO  usuario_curso(id_usuario,id_curso)
-    VALUES (2,1);
-
-    INSERT OR IGNORE INTO usuario_curso(id_usuario,id_curso)
-    VALUES (3,1);
-
-    INSERT OR IGNORE INTO  atividades (questao,a,b,c,d,dica,gabarito,id_curso)
-    VALUES ('Em uma padaria, o padeiro fez 20 paezinhos para o café de manhã. E buscando por ingredientes, encontrou mais 4 pãezinhos do dia anterior, que decidiu juntar com os demais para vender na manhã. Quantos pãezinhos ele tinha disponível para venda naquele momento?','20','22','23','24','Cálculo Básico','d',1);
-
-    INSERT OR IGNORE INTO atividades (questao,a,b,c,d,dica,gabarito,id_curso)
-    VALUES ('20+2?','20','22','23','24','Cálculo Básico','b',1);
-
-	INSERT OR IGNORE INTO atividades (questao,a,b,c,d,dica,gabarito,id_curso)
-    VALUES ('O Joãozinho tem 18 anos. Durante uma entrevista de emprego, questionaram como seria o seu futuro em 5 anos? Daqui a 5 anos, quantos anos Joãozinho teria?','20','22','23','24','Cálculo Básico','c',1);
-
-    INSERT OR IGNORE INTO usuario_atividade (id_usuario,id_atividade,data,acerto,status)
-    VALUES (3,1,'2024-02-05',1,1);
-
-	INSERT OR IGNORE INTO usuario_atividade (id_usuario,id_atividade,data,acerto,status)
-    VALUES (3,2,'2024-02-05',0,1);
-
-	INSERT OR IGNORE INTO usuario_atividade (id_usuario,id_atividade,data,acerto,status)
-    VALUES (3,3,'2024-02-05',1,1);
-
     """)
 
     conexao.commit()
