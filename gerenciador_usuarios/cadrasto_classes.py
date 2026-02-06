@@ -1,4 +1,5 @@
 from pwdlib import PasswordHash
+from banco import *
 
 # Instanciar um PasswordHash usando o método de classe recomendado.
 password_hash = PasswordHash.recommended()
@@ -19,16 +20,17 @@ class Usuario:
         return verified
 
 class Pessoa(Usuario):
-    def __init__(self, nome: str, email: str, cpf: str, senha: str, senha_confirmacao: str):
+    def __init__(self, nome: str, email: str, cpf: str, senha: str, senha_confirmacao: str, tipo: int):
+        if senha != senha_confirmacao:
+            raise ValueError("As senhas não coincidem")
+        
+        senha_hash = password_hash.hash(senha)
+
+        super().__init__(senha_hash)
         self.nome = nome
         self.email = email
         self.cpf = cpf
-
-        senha_hash = None
-        if senha and senha == senha_confirmacao:
-            senha_hash = password_hash.hash(senha)
-
-        super().__init__(senha_hash)
+        self.tipo = tipo
 
 class Professor(Pessoa):
     def __str__(self):
@@ -56,3 +58,18 @@ class Coordenador(Pessoa):
             f"Email: {self.email}\n"
             f"CPF: {self.cpf}\n"
         )
+
+def inserir_usuario(usuario):
+    try:
+        cursor.execute('''
+            INSERT INTO usuarios (nome, email, cpf, tipo, senha)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (usuario.nome, usuario.email, usuario.cpf, usuario.tipo, usuario.senha_hash))
+        
+        conexao.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+        return None
