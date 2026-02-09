@@ -1,7 +1,7 @@
 #conectando aos outros codigos
 import sqlite3
 from Models.verRanking import ranking, ranking_geral
-from Models.ListarCursos import acessar_atividades, adicionar_feito, listar_cursos, fazerAtividades, listar_cursos_progresso, registrar_resposta, registrar_resposta_errada
+from Models.ListarCursos import acessar_atividades, listar_cursos, fazerAtividades, listar_cursos_progresso, registrar_resposta, registrar_resposta_errada
 from Models.resetarProgresso import resetar_progresso
 from Models.verProgresso import progresso_diario, progresso_por_curso, progresso_total
 
