@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Coordenador - EduSystem{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold mb-1"><i class="bi bi-person-badge me-2 text-primary"></i>Painel do Coordenador</h2>
+            <p class="text-muted">Visão geral do sistema educacional</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card info text-center">
+                <div class="card-body py-4">
+                    <i class="bi bi-people text-info display-4 mb-2"></i>
+                    <h2 class="fw-bold mb-1">{{ total_alunos }}</h2>
+                    <p class="text-muted mb-0">Alunos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card success text-center">
+                <div class="card-body py-4">
+                    <i class="bi bi-file-earmark-text text-success display-4 mb-2"></i>
+                    <h2 class="fw-bold mb-1">{{ total_atividades }}</h2>
+                    <p class="text-muted mb-0">Atividades</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card warning text-center">
+                <div class="card-body py-4">
+                    <i class="bi bi-calendar-check text-warning display-4 mb-2"></i>
+                    <h2 class="fw-bold mb-1">{{ atividades_hoje }}</h2>
+                    <p class="text-muted mb-0">Atividades Hoje</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card danger text-center">
+                <div class="card-body py-4">
+                    <i class="bi bi-star-fill text-danger display-4 mb-2"></i>
+                    <h2 class="fw-bold mb-1">{{ total_estrelas }}</h2>
+                    <p class="text-muted mb-0">Estrelas Distribuídas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 100px; height: 100px;">
+                    <i class="bi bi-trophy text-warning" style="font-size: 48px;"></i>
+                </div>
+                <h4 class="fw-bold">Ranking Completo</h4>
+                <p class="text-muted">Veja o desempenho de todos os alunos</p>
+                <a href="{{ url_for('coordenador_ranking') }}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-trophy me-2"></i>Ver Ranking
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 100px; height: 100px;">
+                    <i class="bi bi-graph-up-arrow text-info" style="font-size: 48px;"></i>
+                </div>
+                <h4 class="fw-bold">Relatórios</h4>
+                <p class="text-muted">Análise detalhada por curso</p>
+                <a href="{{ url_for('coordenador_relatorios') }}" class="btn btn-info btn-lg text-white">
+                    <i class="bi bi-file-bar-graph me-2"></i>Ver Relatórios
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto" style="width: 100px; height: 100px;">
+                    <i class="bi bi-person-plus text-success" style="font-size: 48px;"></i>
+                </div>
+                <h4 class="fw-bold">Cadastrar Usuário</h4>
+                <p class="text-muted">Adicione novos alunos, professores ou coordenadores</p>
+                <a href="{{ url_for('cadastro') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>Novo Usuário
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

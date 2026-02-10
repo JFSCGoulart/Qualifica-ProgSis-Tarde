@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EduSystem{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="mb-5">
+        <h1 class="display-6 fw-bold mb-2">
+            👋 Olá, <span class="text-gradient">{{ session.nome.split()[0] }}</span>!
+        </h1>
+        <p class="text-muted">Acompanhe seu progresso e continue aprendendo</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="stat-icon success">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">{{ estrelas }}</h3>
+                    <p class="text-muted mb-0">Estrelas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="stat-icon info">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">{{ atividades_hoje }}</h3>
+                    <p class="text-muted mb-0">Hoje</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="stat-icon warning">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">{{ total_cursos }}</h3>
+                    <p class="text-muted mb-0">Cursos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="stat-icon danger">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">#{{ ranking|length if ranking else '-' }}</h3>
+                    <p class="text-muted mb-0">Posição</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Continue Learning -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-lightning-charge-fill text-warning me-2"></i>
+                        Continue Aprendendo
+                    </h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center align-items-center text-center py-5">
+                    <div class="stat-icon mb-4" style="width: 120px; height: 120px; font-size: 3rem; background: var(--primary-gradient);">
+                        <i class="bi bi-journal-text text-white"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3">Pronto para praticar?</h3>
+                    <p class="text-muted mb-4">Acesse suas atividades e ganhe mais estrelas!</p>
+                    <a href="{{ url_for('aluno_cursos') }}" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-play-circle me-2"></i>
+                        Ver Meus Cursos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ranking -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-trophy text-warning me-2"></i>
+                        Top 3
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="ranking-list">
+                        {% for aluno in ranking %}
+                        <div class="ranking-item {{ 'top-' + loop.index|string if loop.index <= 3 else '' }}">
+                            <div class="ranking-position {{ 'gold' if loop.index == 1 else 'silver' if loop.index == 2 else 'bronze' if loop.index == 3 else 'normal' }}">
+                                {{ loop.index }}
+                            </div>
+                            <div class="ranking-info">
+                                <div class="ranking-name">{{ aluno.nome.split()[0] }}</div>
+                                <div class="ranking-stats">{{ aluno.estrelas }} estrelas</div>
+                            </div>
+                            {% if aluno.nome == session.nome %}
+                            <span class="badge badge-primary">Você</span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-trophy fs-1"></i>
+                            <p class="mt-2">Ranking vazio</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <a href="{{ url_for('aluno_ranking') }}" class="btn btn-outline-primary w-100 mt-3">
+                        Ver Completo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

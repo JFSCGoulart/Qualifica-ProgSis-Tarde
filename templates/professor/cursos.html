@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ curso_nome }} - Professor{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-journal-text me-2 text-primary"></i>{{ curso_nome }}</h2>
+            <p class="text-muted">Gerenciamento de atividades</p>
+        </div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtividade">
+            <i class="bi bi-plus-lg me-2"></i>Nova Atividade
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-list-check me-2"></i>Atividades do Curso</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Questão</th>
+                        <th>Gabarito</th>
+                        <th width="100">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for atv in atividades %}
+                    <tr>
+                        <td><span class="badge bg-secondary">#{{ atv.id_atividade }}</span></td>
+                        <td>{{ atv.questao[:60] }}{% if atv.questao|length > 60 %}...{% endif %}</td>
+                        <td><span class="badge bg-success">{{ atv.gabarito.upper() }}</span></td>
+                        <td>
+                            <form method="POST" class="d-inline" onsubmit="return confirm('Tem certeza? Esta ação não pode ser desfeita!');">
+                                <input type="hidden" name="acao" value="deletar">
+                                <input type="hidden" name="atividade_id" value="{{ atv.id_atividade }}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Nenhuma atividade cadastrada
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nova Atividade -->
+<div class="modal fade" id="modalAtividade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <input type="hidden" name="acao" value="adicionar">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>Nova Atividade</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Questão</label>
+                        <textarea class="form-control" name="questao" rows="3" required placeholder="Digite a questão..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Alternativa A</label>
+                            <input type="text" class="form-control" name="a" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Alternativa B</label>
+                            <input type="text" class="form-control" name="b" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Alternativa C</label>
+                            <input type="text" class="form-control" name="c" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Alternativa D</label>
+                            <input type="text" class="form-control" name="d" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Gabarito</label>
+                            <select class="form-select" name="gabarito" required>
+                                <option value="a">A</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                                <option value="d">D</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Dica (opcional)</label>
+                            <input type="text" class="form-control" name="dica" placeholder="Uma dica para ajudar os alunos...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg me-2"></i>Salvar Atividade
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

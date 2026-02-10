@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - EduSystem{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <h2 class="fw-bold mb-4"><i class="bi bi-file-bar-graph me-2 text-info"></i>Relatórios de Desempenho</h2>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-book me-2"></i>Desempenho por Curso</h5>
+                </div>
+                <div class="card-body">
+                    {% if por_curso %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Curso</th>
+                                    <th class="text-center">Alunos</th>
+                                    <th class="text-center">Tentativas</th>
+                                    <th>Taxa de Acerto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for curso in por_curso %}
+                                <tr>
+                                    <td class="fw-semibold">{{ curso.nome }}</td>
+                                    <td class="text-center">{{ curso.alunos or 0 }}</td>
+                                    <td class="text-center">{{ curso.tentativas or 0 }}</td>
+                                    <td>
+                                        {% if curso.tentativas > 0 %}
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress-custom flex-grow-1 me-2">
+                                                <div class="progress-fill" style="width: {{ (curso.acertos / curso.tentativas * 100) }}%"></div>
+                                            </div>
+                                            <span class="fw-semibold" style="min-width: 50px;">
+                                                {{ ((curso.acertos / curso.tentativas * 100)|int) }}%
+                                            </span>
+                                        </div>
+                                        {% else %}
+                                        <span class="text-muted">Sem dados</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-graph-up fs-1"></i>
+                        <p class="mt-2">Nenhum dado disponível</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-check me-2"></i>Atividades de Hoje</h5>
+                </div>
+                <div class="card-body">
+                    {% if atividades_hoje %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in atividades_hoje %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span>{{ item.nome }}</span>
+                            <span class="badge bg-primary rounded-pill">{{ item.quantidade }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x fs-1"></i>
+                        <p class="mt-2">Nenhuma atividade hoje</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

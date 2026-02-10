@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Cursos - EduSystem{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-book me-2 text-primary"></i>Meus Cursos</h2>
+            <p class="text-muted mb-0">Selecione um curso para ver as atividades</p>
+        </div>
+        <span class="badge bg-primary fs-6">{{ cursos|length }} curso(s)</span>
+    </div>
+
+    <div class="row g-4">
+        {% for curso in cursos %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="horario-badge horario-{{ curso.horario }}">
+                            {% if curso.horario == 0 %}🌅 Matutino{% elif curso.horario == 1 %}☀️ Vespertino{% else %}🌙 Noturno{% endif %}
+                        </span>
+                        {% if curso.feitas > 0 %}
+                        <span class="badge bg-success">
+                            {{ ((curso.feitas / curso.total_atividades * 100)|int) if curso.total_atividades > 0 else 0 }}%
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <h5 class="card-title fw-bold mb-2">{{ curso.nome }}</h5>
+                    
+                    <div class="d-flex align-items-center text-muted mb-3">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>
+                        <small>{{ curso.total_atividades }} atividades disponíveis</small>
+                    </div>
+
+                    {% if curso.total_atividades > 0 %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-muted">Progresso</span>
+                            <span class="fw-semibold">{{ curso.feitas }}/{{ curso.total_atividades }}</span>
+                        </div>
+                        <div class="progress-custom">
+                            <div class="progress-fill" style="width: {{ (curso.feitas / curso.total_atividades * 100) if curso.total_atividades > 0 else 0 }}%"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-0 pt-0">
+                    <a href="{{ url_for('aluno_atividade', curso_id=curso.id_curso) }}" class="btn btn-primary w-100">
+                        <i class="bi bi-play-circle me-2"></i>
+                        {% if curso.feitas == 0 %}Começar{% else %}Continuar{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                <i class="bi bi-inbox text-muted" style="font-size: 48px;"></i>
+            </div>
+            <h4 class="text-muted">Nenhum curso matriculado</h4>
+            <p class="text-muted">Entre em contato com a coordenação</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

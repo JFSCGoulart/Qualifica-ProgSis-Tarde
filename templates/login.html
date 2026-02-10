@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-vh-100 d-flex align-items-center justify-content-center p-4">
+    <div class="login-card w-100" style="max-width: 450px;">
+        <div class="text-center mb-5">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-mortarboard-fill text-primary" style="font-size: 40px;"></i>
+            </div>
+            <h2 class="fw-bold mb-2">Bem-vindo!</h2>
+            <p class="text-muted">Sistema Educacional Integrado</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="mb-4">
+                <label class="form-label fw-semibold">CPF</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-person-vcard text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" name="cpf" placeholder="Apenas números" required maxlength="11" pattern="\d{11}">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Senha</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-lock text-muted"></i>
+                    </span>
+                    <input type="password" class="form-control border-start-0" name="senha" placeholder="Digite sua senha" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Tipo de Acesso</label>
+                <div class="row g-2">
+                    <div class="col-4">
+                        <input type="radio" class="btn-check" name="tipo" id="tipo_aluno" value="1" checked>
+                        <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="tipo_aluno">
+                            <i class="bi bi-mortarboard d-block mb-1 fs-4"></i>
+                            <small>Aluno</small>
+                        </label>
+                    </div>
+                    <div class="col-4">
+                        <input type="radio" class="btn-check" name="tipo" id="tipo_professor" value="2">
+                        <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="tipo_professor">
+                            <i class="bi bi-person-workspace d-block mb-1 fs-4"></i>
+                            <small>Professor</small>
+                        </label>
+                    </div>
+                    <div class="col-4">
+                        <input type="radio" class="btn-check" name="tipo" id="tipo_coordenador" value="3">
+                        <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="tipo_coordenador">
+                            <i class="bi bi-person-badge d-block mb-1 fs-4"></i>
+                            <small>Coord.</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                <i class="bi bi-shield-check me-1"></i>
+                Acesso restrito a usuários cadastrados
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

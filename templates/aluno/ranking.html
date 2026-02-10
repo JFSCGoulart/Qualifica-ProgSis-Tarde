@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking - EduSystem{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <div class="text-center mb-5">
+        <h1 class="display-6 fw-bold mb-3">
+            <i class="bi bi-trophy text-warning me-3"></i>
+            Ranking Geral
+        </h1>
+        <p class="text-muted">Os melhores alunos do sistema</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {% if ranking %}
+            <div class="ranking-list">
+                {% for aluno in ranking %}
+                <div class="ranking-item {{ 'top-' + loop.index|string if loop.index <= 3 else '' }} {{ 'border-primary' if aluno.nome == session.nome }}">
+                    <div class="ranking-position {{ 'gold' if loop.index == 1 else 'silver' if loop.index == 2 else 'bronze' if loop.index == 3 else 'normal' }}">
+                        {% if loop.index <= 3 %}
+                        <i class="bi bi-trophy-fill"></i>
+                        {% else %}
+                        {{ loop.index }}
+                        {% endif %}
+                    </div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">{{ aluno.nome }}</div>
+                        <div class="ranking-stats">
+                            <span><i class="bi bi-check-circle me-1"></i>{{ aluno.atividades }} atividades</span>
+                            <span><i class="bi bi-bullseye me-1"></i>{{ aluno.acertos }} acertos</span>
+                        </div>
+                    </div>
+                    <div class="ranking-score">
+                        <div class="ranking-stars">{{ aluno.estrelas }} ⭐</div>
+                        {% if aluno.nome == session.nome %}
+                        <span class="badge badge-primary mt-1">Você</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card text-center py-5">
+                <i class="bi bi-trophy text-muted" style="font-size: 4rem;"></i>
+                <h4 class="mt-3 text-muted">Ranking vazio</h4>
+                <p class="text-muted">Seja o primeiro a conquistar estrelas!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
