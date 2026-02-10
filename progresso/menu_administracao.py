@@ -315,6 +315,236 @@ def menu_visualizar_usuarios():
                 continue
 
 
+def editar_nome(user_id, tipo_num, render):
+    while True:
+        render()
+        novo_nome = input("\nNovo nome (ou '<' pra voltar): ").strip()
+
+        if novo_nome == "<":
+            return
+
+        if not novo_nome:
+            menu_feedback("Nome não pode ser vazio.")
+            call_to_action_clear()
+            continue
+
+        status = atualizar_nome(user_id, novo_nome, tipo_num)
+        tratar_retorno_atualizacao(status, "Nome")
+        call_to_action_clear()
+        return
+
+
+def editar_email(user_id, tipo_num, render):
+    while True:
+        render()
+        novo_email = input("\nNovo email (ou '<' pra voltar): ").strip()
+
+        if novo_email == "<":
+            return
+
+        novo_email = novo_email.strip().lower()
+
+        if not validar_email(novo_email):
+            menu_feedback("Email inválido.")
+            call_to_action_clear()
+            continue
+
+        # Pré-checagem pra feedback melhor (opcional, mas útil)
+        ja_existe = buscar_usuario_por_email(novo_email)
+        if ja_existe and ja_existe[0] != user_id:
+            tratar_retorno_atualizacao("email_ja_cadastrado", "Email")
+            call_to_action_clear()
+            continue
+
+        status = atualizar_email(user_id, novo_email, tipo_num)
+        tratar_retorno_atualizacao(status, "Email")
+        call_to_action_clear()
+        return
+
+
+def editar_cpf(user_id, tipo_num, render):
+    while True:
+        render()
+        novo_cpf_raw = input("\nNovo CPF (ou '<' pra voltar): ").strip()
+
+        if novo_cpf_raw == "<":
+            return
+
+        novo_cpf = formatar_cpf(novo_cpf_raw)
+        if novo_cpf is None:
+            menu_feedback("CPF inválido.")
+            call_to_action_clear()
+            continue
+
+        ja_existe = buscar_usuario_por_cpf(novo_cpf)
+        if ja_existe and ja_existe[0] != user_id:
+            tratar_retorno_atualizacao("cpf_ja_cadastrado", "CPF")
+            call_to_action_clear()
+            continue
+
+        status = atualizar_cpf(user_id, novo_cpf, tipo_num)
+        tratar_retorno_atualizacao(status, "CPF")
+        call_to_action_clear()
+        return
+
+
+def editar_senha(user_id, render):
+    while True:
+        render()
+        nova_senha = input("\nNova senha (ou '<' pra voltar): ").strip()
+        if nova_senha == "<":
+            return
+
+        if not nova_senha:
+            menu_feedback("A nova senha não pode ser vazia.")
+            call_to_action_clear()
+            continue
+
+        confirmacao = input("\nConfirme a nova senha: ").strip()
+
+        if nova_senha != confirmacao:
+            tratar_retorno_atualizacao("senhas_nao_coincidem", "Senha")
+            call_to_action_clear()
+            continue
+
+        novo_hash = password_hash.hash(nova_senha)
+
+        status = atualizar_hash(user_id, novo_hash)
+        tratar_retorno_atualizacao(status, "Senha")
+        call_to_action_clear()
+        return
+
+
+def editar_tipo(user_id, tipo_num, label, render):
+    while True:
+        render()
+        render_menu_novo_tipo_usuario()
+        novo_tipo_raw = input("> ").strip()
+
+        match novo_tipo_raw:
+            case "1":
+                novo_tipo = 1
+            case "2":
+                novo_tipo = 2
+            case "3":
+                novo_tipo = 3
+            case "4":
+                return tipo_num, label  # volta ao menu anterior
+            case _:
+                menu_feedback("Opção inválida.")
+                call_to_action_clear()
+                continue
+
+        if novo_tipo == tipo_num:
+            tratar_retorno_atualizacao("sem_alteracao", "Tipo")
+            call_to_action_clear()
+            continue
+
+        status = atualizar_tipo(user_id, novo_tipo, tipo_num)
+        tratar_retorno_atualizacao(status, "Tipo")
+        call_to_action_clear()
+
+        if status == "atualizado":
+            tipo_num = novo_tipo
+            match tipo_num:
+                case 1:
+                    label = "aluno"
+                case 2:
+                    label = "professor"
+                case 3:
+                    label = "coordenador"
+
+            return tipo_num, label
+
+
+def editar_usuario(tipo_num, label):
+    user_id = selecionar_usuario_por_id(tipo_num, label)
+    if user_id is None:
+        return
+
+    while True:
+        clear()
+
+        usuario = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+        if not usuario:
+            menu_feedback("Usuário não encontrado.")
+            call_to_action_clear()
+            return
+
+        render_usuario_em_edicao(user_id, label, usuario)
+
+        render_menu_editar_usuario()
+        escolha = input("> ").strip()
+
+        match escolha:
+            case "1":
+                def render():
+                    clear()
+                    usuario_atual = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+                    render_usuario_em_edicao(user_id, label, usuario_atual)
+
+                editar_nome(user_id, tipo_num, render)
+
+            case "2":
+                def render():
+                    clear()
+                    usuario_atual = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+                    render_usuario_em_edicao(user_id, label, usuario_atual)
+
+                editar_email(user_id, tipo_num, render)
+
+            case "3":
+                def render():
+                    clear()
+                    usuario_atual = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+                    render_usuario_em_edicao(user_id, label, usuario_atual)
+
+                editar_cpf(user_id, tipo_num, render)
+
+            case "4":
+                def render():
+                    clear()
+                    usuario_atual = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+                    render_usuario_em_edicao(user_id, label, usuario_atual)
+
+                editar_senha(user_id, render)
+
+            case "5":
+                def render():
+                    clear()
+                    usuario_atual = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+                    render_usuario_em_edicao(user_id, label, usuario_atual)
+
+                tipo_num, label = editar_tipo(user_id, tipo_num, label, render)
+
+            case "6":
+                return
+
+            case _:
+                menu_feedback("Opção inválida.")
+                call_to_action_clear()
+
+
+def menu_editar_usuario():
+    while True:
+        clear()
+        render_menu_tipo_usuario("EDITAR")
+        escolha = input("> ").strip()
+        match escolha:
+            case "1":
+                editar_usuario(1, "aluno")
+            case "2":
+                editar_usuario(2, "professor")
+            case "3":
+                editar_usuario(3, "coordenador")
+            case "4":
+                return
+            case _:
+                menu_feedback("Opção inválida.")
+                call_to_action_clear()
+                continue
+
+            
 def remover_usuario(tipo_num: int, label: str) -> None:
     while True:
         clear()
