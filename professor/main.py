@@ -1,9 +1,9 @@
 import sqlite3
 
-from funcoes import *
-from funcoes_tarefas import *
+from Models.funcoes import adicionar_curso, ver_curso, ver_materia, excluir_curso, sair
+from Models.funcoes_tarefas import adicionar_questao, excluir_atividade, ver_questoes, ver_tudo
 
-#Função que exemplifica o menu do usuário( ilustrativo )
+#Função que mostra o menu do usuário
 
 def stil():
     print("\n --- BEM VINDO! --- \n")
