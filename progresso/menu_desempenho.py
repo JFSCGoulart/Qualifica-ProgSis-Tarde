@@ -1,5 +1,11 @@
 import progresso.repositorio_ranking as repositorio_ranking
-from ui import *
+from ui import (
+    clear,
+    call_to_action_clear,
+    menu_title,
+    menu_feedback,
+    render_menu_escolha_curso,
+)
 
 
 def ver_ranking(nome_curso):
