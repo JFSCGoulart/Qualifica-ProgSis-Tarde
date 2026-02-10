@@ -230,7 +230,7 @@ def visualizar_usuarios(tipo_num, label):
     resultado = buscar_usuario_por_tipo(tipo_num)
 
     if not resultado:
-        menu_error_success(f"Nenhum {label.lower()} cadastrado.")
+        menu_feedback(f"Nenhum {label.lower()} cadastrado.")
         return
 
     print(f"=== Lista de {label}s ===")
@@ -250,9 +250,48 @@ def visualizar_usuario(id_usuario: int, tipo: int, label: str):
     return True
 
 
+def selecionar_usuario_por_id(tipo_num: int, label: str):
+    while True:
+        clear()
+
+        usuarios = buscar_usuario_por_tipo(tipo_num)
+        if not usuarios:
+            menu_feedback(f"Nenhum {label.lower()} cadastrado.")
+            call_to_action_clear()
+            return None
+
+        print(f"=== Lista de {label}s ===")
+        for id, nome, email, cpf, *_ in usuarios:
+            print(f"ID: {id} | Nome: {nome} | Email: {email} | CPF: {cpf}")
+
+        user_id_raw = input(
+            f"\nDigite o ID do(a) {label} (ou '<' pra voltar): "
+        ).strip()
+
+        if user_id_raw == "<":
+            return None
+
+        if not user_id_raw.isdigit():
+            menu_feedback("ID inválido. Digite um número.")
+            call_to_action_clear()
+            continue
+
+        user_id = int(user_id_raw)
+
+        clear()
+        encontrado = visualizar_usuario(user_id, tipo_num, label)
+        if not encontrado:
+            menu_feedback("Nenhum usuário encontrado com esse ID.")
+            call_to_action_clear()
+            continue
+
+        return user_id
+
+
 def menu_visualizar_usuarios():
     while True:
-        render_menu_visualizar_usuario()
+        clear()
+        render_menu_tipo_usuario("VISUALIZAR")
         escolha = input("> ").strip()
 
         match escolha:
@@ -271,7 +310,7 @@ def menu_visualizar_usuarios():
             case "4":
                 return
             case _:
-                menu_error_success("Opção inválida.")
+                menu_feedback("Opção inválida.")
                 call_to_action_clear()
                 continue
 
