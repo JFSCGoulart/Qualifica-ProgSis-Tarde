@@ -24,6 +24,30 @@ from ui import (
 )
 
 
+def tratar_retorno_atualizacao(status: str, campo: str):
+    match status:
+        case "atualizado":
+            menu_feedback(f"{campo} atualizado com sucesso!")
+        case "nao_encontrado":
+            menu_feedback("Usuário não encontrado.")
+        case "sem_alteracao":
+            menu_feedback(f"Nenhuma alteração: {campo} informado é igual ao atual.")
+        case "email_ja_cadastrado":
+            menu_feedback("Email já cadastrado.")
+        case "cpf_ja_cadastrado":
+            menu_feedback("CPF já cadastrado.")
+        case "senhas_nao_coincidem":
+            menu_feedback("As senhas não coincidem.")
+        case "senha_atual_incorreta":
+            menu_feedback("Senha atual incorreta.")
+        case "tipo_invalido":
+            menu_feedback("Tipo inválido.")
+        case "erro":
+            menu_feedback("Erro ao atualizar.")
+        case _:
+            menu_feedback("Resposta inesperada do sistema.")
+
+
 def cadastrar_usuarios(tipo_cls, tipo_num, label):
     def render():
         render_menu_cadastrar_usuario(label.upper())
