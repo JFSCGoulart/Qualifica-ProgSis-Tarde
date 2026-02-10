@@ -1,4 +1,5 @@
 from banco import conexao, cursor
+from progresso.modelos import password_hash
 from sqlite3 import IntegrityError
 
 
@@ -81,17 +82,136 @@ def buscar_usuario_por_id_e_tipo(user_id: int, tipo_num: int):
     return cursor.fetchone()
 
 
-def deletar_usuario(user_id: int, tipo_num: int) -> bool | None:
+def buscar_hash_senha_por_id_e_tipo(user_id: int, tipo_num: int):
     cursor.execute(
-        "DELETE FROM usuarios WHERE id_usuario = ? AND tipo = ?",
+        """
+        SELECT senha
+        FROM usuarios
+        WHERE id_usuario = ? AND tipo = ?
+        """,
         (user_id, tipo_num),
     )
-    conexao.commit()
+    linha = cursor.fetchone()
+    return linha[0] if linha else None
 
-    if cursor.rowcount == 1:
-        return True
-    return False
 
+def atualizar_nome(user_id: int, novo_nome: str, tipo_num: int) -> str:
+    usuario = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+    if not usuario:
+        return "nao_encontrado"
+
+    _id, nome_atual, _email, _cpf, _tipo = usuario
+
+    if novo_nome == nome_atual:
+        return "sem_alteracao"
+
+    try:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET nome = ?
+            WHERE id_usuario = ? AND tipo = ?
+            """,
+            (novo_nome, user_id, tipo_num),
+        )
+        conexao.commit()
+        return "atualizado"
+    except Exception:
+        return "erro"
+
+def atualizar_email(user_id: int, novo_email: str, tipo_num: int) -> str:
+    # 1) Verifica se o usuário existe e pega o email atual
+    usuario = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+    if not usuario:
+        return "nao_encontrado"
+
+    _id, _nome, email_atual, _cpf, _tipo = usuario
+
+    # 2) Verifica se houve mudança
+    if novo_email == email_atual:
+        return "sem_alteracao"
+
+    # 3) Tenta atualizar (pode bater UNIQUE)
+    try:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET email = ?
+            WHERE id_usuario = ? AND tipo = ?
+            """,
+            (novo_email, user_id, tipo_num),
+        )
+        conexao.commit()
+        return "atualizado"
+
+    except IntegrityError:
+        # outro usuário já tem esse email
+        return "email_ja_cadastrado"
+
+    except Exception:
+        return "erro"
+
+
+def atualizar_cpf(user_id: int, novo_cpf: str, tipo_num: int) -> str:
+    # 1) Verifica se o usuário existe e pega o cpf atual
+    usuario = buscar_usuario_por_id_e_tipo(user_id, tipo_num)
+    if not usuario:
+        return "nao_encontrado"
+
+    _id, _nome, _email, cpf_atual, _tipo = usuario
+
+    # 2) Verifica se houve mudança
+    if novo_cpf == cpf_atual:
+        return "sem_alteracao"
+
+    # 3) Tenta atualizar (pode bater UNIQUE)
+    try:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET cpf = ?
+            WHERE id_usuario = ? AND tipo = ?
+            """,
+            (novo_cpf, user_id, tipo_num),
+        )
+        conexao.commit()
+        return "atualizado"
+
+    except IntegrityError:
+        # outro usuário já tem esse cpf
+        return "cpf_ja_cadastrado"
+
+    except Exception:
+        return "erro"
+
+
+def atualizar_senha(user_id: int, tipo_num: int, senha_atual: str, nova_senha: str, confirmacao: str) -> str:
+    senha_hash_atual = buscar_hash_senha_por_id_e_tipo(user_id, tipo_num)
+    if not senha_hash_atual:
+        return "nao_encontrado"
+
+    if nova_senha != confirmacao:
+        return "senhas_nao_coincidem"
+
+    verified, _new_hash = password_hash.verify_and_update(senha_atual, senha_hash_atual)
+    if not verified:
+        return "senha_atual_incorreta"
+
+    novo_hash = password_hash.hash(nova_senha)
+
+    try:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET senha = ?
+            WHERE id_usuario = ? AND tipo = ?
+            """,
+            (novo_hash, user_id, tipo_num),
+        )
+        conexao.commit()
+        return "atualizado"
+    except Exception:
+        return "erro"
 
 def atualizar_hash(user_id: int, novo_hash: str) -> str:
     cursor.execute(
@@ -102,3 +222,29 @@ def atualizar_hash(user_id: int, novo_hash: str) -> str:
     if cursor.rowcount == 1:
         return "atualizado"
     return "nao_encontrado"
+
+
+def atualizar_tipo(user_id: int, novo_tipo: str, tipo_num: int) -> str:
+    cursor.execute(
+        """
+        UPDATE usuarios SET tipo = ?
+        WHERE id_usuario = ? AND tipo = ?
+        """,
+        (novo_tipo, user_id, tipo_num),
+    )
+    conexao.commit()
+    if cursor.rowcount == 1:
+        return "atualizado"
+    return "nao_encontrado"
+
+
+def deletar_usuario(user_id: int, tipo_num: int) -> bool | None:
+    cursor.execute(
+        "DELETE FROM usuarios WHERE id_usuario = ? AND tipo = ?",
+        (user_id, tipo_num),
+    )
+    conexao.commit()
+
+    if cursor.rowcount == 1:
+        return True
+    return False
