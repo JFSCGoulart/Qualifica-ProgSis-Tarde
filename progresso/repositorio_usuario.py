@@ -2,7 +2,7 @@ from banco import conexao, cursor
 from sqlite3 import IntegrityError
 
 
-def inserir_usuario(usuario) -> bool | None:
+def inserir_usuario(usuario) -> int | str | None:
     try:
         cursor.execute(
             """
@@ -12,9 +12,10 @@ def inserir_usuario(usuario) -> bool | None:
             (usuario.nome, usuario.email, usuario.cpf, usuario.tipo, usuario.senha_hash),
         )
         conexao.commit()
-        return True
+        return cursor.lastrowid
+
     except IntegrityError:
-        return False
+        return "cpf_ou_email_ja_cadastrado"
     except Exception as e:
         print(f"Erro inesperado: {e}")
         return None
