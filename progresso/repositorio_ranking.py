@@ -1,63 +1,112 @@
-from datetime import date
+import sqlite3
 
-def ranquear_alunos(lista_alunos, nome_curso):
+conexao = sqlite3.connect('banco.db')
+cursor = conexao.cursor()
 
-    exibiu_menu = False
 
-    alunos_do_curso = [
-        aluno for aluno in lista_alunos if aluno[1] == nome_curso
-    ]
+def existem_atividade_no_curso(nome_curso) -> bool:
+    cursor.execute(
+        """
+        SELECT 1
+        FROM usuario_atividade ua
+        JOIN atividades a
+            ON a.id_atividade = ua.id_atividade
+        JOIN cursos c
+            ON c.id_curso = a.id_curso
+        WHERE c.nome = ?
+        LIMIT 1;
+        """,
+        (nome_curso,)
+    )
 
-    ranking = sorted(alunos_do_curso, key=lambda aluno: aluno[3], reverse=True)
+    return cursor.fetchone() is not None
 
-    if alunos_do_curso:
-        for posicao, item in enumerate(ranking, start=1):
-            if item[1] == nome_curso:
-                if not exibiu_menu:
-                    print(f"\n--- Total de acerto em {nome_curso} ---")
-                    exibiu_menu = True
-                print(
-                    f"Posição: {posicao}º | "
-                    f"Nome: {item[0]} | "
-                    f"Curso: {item[1]} | "
-                    f"Questões feitas: {item[2]} | "
-                    f"Estrelas (acertos): {item[3]} | "
-                    f"Data: {item[4]}"
-                )
-    else:
-        print(f"\n- Nenhum aluno cadastrado no curso {nome_curso}")
 
-def total_atividades_hoje(lista_alunos, nome_curso):
-    data_atual = date.today()
-    
-    alunos_filtrados = [
-        aluno for aluno in lista_alunos
-        if aluno[1] == nome_curso
-        and aluno[4] == data_atual
-    ]    
+def ranquear_alunos(nome_curso):
+    cursor.execute(
+        """
+        SELECT
+            usuarios.nome AS nome_usuario,
+            COUNT(usuario_atividade.id_atividade) AS quantidade_atividades_feitas,
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN usuario_atividade.status = 1 THEN 1
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS quantidade_atividades_acertadas
+        FROM cursos
+        JOIN usuario_curso
+            ON usuario_curso.id_curso = cursos.id_curso
+        JOIN usuarios
+            ON usuarios.id_usuario = usuario_curso.id_usuario
+        LEFT JOIN atividades
+            ON atividades.id_curso = cursos.id_curso
+        LEFT JOIN usuario_atividade
+            ON usuario_atividade.id_usuario = usuarios.id_usuario
+           AND usuario_atividade.id_atividade = atividades.id_atividade
+        WHERE cursos.nome = ?
+        GROUP BY
+            usuarios.id_usuario
+        ORDER BY
+            quantidade_atividades_acertadas DESC,
+            usuarios.nome;
+        """,
+        (nome_curso,)
+    )
+    return cursor.fetchall()
 
-    quantidade = len(alunos_filtrados)
 
-    if alunos_filtrados:
-        total_atividades = sum(aluno[2] for aluno in alunos_filtrados)
-        aluno_str = "aluno" if quantidade == 1 else "alunos"
-        acao_str = "fez" if quantidade == 1 else "fizeram"
-        atividade_str = "atividade" if total_atividades == 1 else "atividades"
-        print(f"\n- {len(alunos_filtrados)} {aluno_str} {acao_str} um total de {total_atividades} {atividade_str} em {nome_curso}")
-    else:
-        print(f"\n- Nenhum aluno de {nome_curso} fez atividades hoje ({data_atual})")
+def total_atividades_hoje(nome_curso):
+    cursor.execute(
+        """
+        SELECT
+            COUNT(DISTINCT usuario_atividade.id_usuario) AS quantidade_de_alunos,
+            COUNT(usuario_atividade.id_atividade) AS quantidade_atividades_feitas,
+            MAX(usuario_atividade.data) AS ultima_data_registrada
+        FROM usuario_atividade
+        JOIN atividades
+            ON atividades.id_atividade = usuario_atividade.id_atividade
+        JOIN cursos
+            ON cursos.id_curso = atividades.id_curso
+        WHERE cursos.nome = ?
+          AND usuario_atividade.data = DATE('now', 'localtime');
+        """,
+        (nome_curso,)
+    )
+    return cursor.fetchone()
 
-def desempenho_por_curso(lista_alunos, nome_curso):
-    alunos_do_curso = [
-        aluno for aluno in lista_alunos if aluno[1] == nome_curso
-    ]
 
-    total_acertos = sum(aluno[3] for aluno in alunos_do_curso)
-    quant_alunos = len(alunos_do_curso)
-    quant_questoes = 100
-
-    if alunos_do_curso:
-        resultado = ((total_acertos) / (quant_alunos * quant_questoes)) * 100
-        print(f"\n- {resultado}% acertaram o módulo de {nome_curso}")
-    else:
-        print(f"\n- Nenhum aluno cadastrado no curso {nome_curso}")
+def desempenho_por_curso(nome_curso):
+    cursor.execute(
+        """
+        SELECT
+            COUNT(DISTINCT usuarios.id_usuario) AS quant_matriculados,
+            COUNT(DISTINCT atividades.id_atividade) AS quant_questoes,
+            COUNT(DISTINCT usuario_atividade.id_usuario) AS quant_fizeram,
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN usuario_atividade.status = 1 THEN 1
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS total_acertos
+        FROM cursos
+        LEFT JOIN usuario_curso
+            ON usuario_curso.id_curso = cursos.id_curso
+        LEFT JOIN usuarios
+            ON usuarios.id_usuario = usuario_curso.id_usuario
+        LEFT JOIN atividades
+            ON atividades.id_curso = cursos.id_curso
+        LEFT JOIN usuario_atividade
+            ON usuario_atividade.id_usuario = usuarios.id_usuario
+           AND usuario_atividade.id_atividade = atividades.id_atividade
+        WHERE cursos.nome = ?;
+        """,
+        (nome_curso,)
+    )
+    return cursor.fetchone()
