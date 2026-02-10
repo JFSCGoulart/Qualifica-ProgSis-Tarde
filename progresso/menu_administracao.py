@@ -546,63 +546,47 @@ def menu_editar_usuario():
 
             
 def remover_usuario(tipo_num: int, label: str) -> None:
+    user_id = selecionar_usuario_por_id(tipo_num, label)
+    if user_id is None:
+        return
+
     while True:
         clear()
-        tem_usuarios = visualizar_usuarios(tipo_num, label)
+        resultado = visualizar_usuario(user_id, tipo_num, label)
 
-        if not tem_usuarios:
+        if resultado is False:
+            print(f"O ID {user_id} não está associado a nenhum {label} cadastrado.")
             call_to_action_clear()
-            return
+            break
 
-        user_id_raw = input(f"\nDigite o ID do(a) {label} para deletar (ou '<' pra voltar): ").strip()
-
-        if user_id_raw == "<":
-            return
-
-        if not user_id_raw.isdigit():
-            menu_error_success("ID inválido. Digite um número ou '<' para voltar.")
+        confirm = input(f"\nTem certeza que deseja deletar o(a) {label} de ID {user_id}? (s/n): ").strip().lower()
+        
+        if confirm not in ("s", "n"):
+            menu_feedback("Resposta inválida. Digite 's' para sim ou 'n' para não.")
             call_to_action_clear()
             continue
 
-        id_usuario = int(user_id_raw)
+        if confirm == "n":
+            break
 
-        while True:
-            clear()
-            resultado = visualizar_usuario(id_usuario, tipo_num, label)
-
-            if resultado is False:
-                print(f"O ID {id_usuario} não está associado a nenhum {label} cadastrado.")
-                call_to_action_clear()
-                break
-
-            confirm = input(f"\nTem certeza que deseja deletar o(a) {label} de ID {id_usuario}? (s/n): ").strip().lower()
+        if confirm == "s":
+            resultado = deletar_usuario(user_id, tipo_num)
             
-            if confirm not in ("s", "n"):
-                menu_error_success("Resposta inválida. Digite 's' para sim ou 'n' para não.")
-                call_to_action_clear()
-                continue
-
-            if confirm == "n":
-                break
-
-            if confirm == "s":
-                resultado = deletar_usuario(id_usuario, tipo_num)
-                
-                if resultado is True:
-                    menu_error_success("Usuário deletado com sucesso!")
-                elif resultado is False:
-                    menu_error_success("Nenhum usuário encontrado com esse ID.")
-                else:
-                    menu_error_success("Erro ao deletar usuário")
-                
-                call_to_action_clear()
-                break
+            if resultado is True:
+                menu_feedback("Usuário deletado com sucesso!")
+            elif resultado is False:
+                menu_feedback("Nenhum usuário encontrado com esse ID.")
+            else:
+                menu_feedback("Erro ao deletar usuário")
+            
+            call_to_action_clear()
+            break
 
 
 def menu_remover_usuários():
     while True:
         clear()
-        render_menu_remover_usuario()
+        render_menu_tipo_usuario("REMOVER")
         escolha = input("> ").strip()
         match escolha:
             case "1":
@@ -614,30 +598,28 @@ def menu_remover_usuários():
             case "4":
                 return
             case _:
-                menu_error_success("Opção inválida.")
+                menu_feedback("Opção inválida.")
                 call_to_action_clear()
                 continue
 
 
-def rodar_menu():
+def menu_administracao():
     while True:
         clear()
-        render_menu_coordenador()
+        render_menu_gerenciar_usuarios()
         escolha = input("> ").strip()
 
         match escolha:
             case "1":
-                clear()
                 menu_cadastrar_usuarios()
             case "2":
-                clear()
                 menu_visualizar_usuarios()
             case "3":
-                clear()
-                menu_remover_usuários()
+                menu_editar_usuario()
             case "4":
-                menu_error_success("Serviço encerrado...")
-                break
+                menu_remover_usuários()
+            case "5":
+                return
             case _:
-                menu_error_success("Opção inválida.")
+                menu_feedback("Opção inválida.")
                 call_to_action_clear()
