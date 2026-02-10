@@ -238,13 +238,37 @@ def atualizar_tipo(user_id: int, novo_tipo: str, tipo_num: int) -> str:
     return "nao_encontrado"
 
 
-def deletar_usuario(user_id: int, tipo_num: int) -> bool | None:
+def usuario_tem_vinculos(user_id: int) -> bool:
     cursor.execute(
-        "DELETE FROM usuarios WHERE id_usuario = ? AND tipo = ?",
-        (user_id, tipo_num),
+        "SELECT 1 FROM usuario_curso WHERE id_usuario = ? LIMIT 1",
+        (user_id,),
     )
-    conexao.commit()
-
-    if cursor.rowcount == 1:
+    if cursor.fetchone():
         return True
-    return False
+
+    cursor.execute(
+        "SELECT 1 FROM usuario_atividade WHERE id_usuario = ? LIMIT 1",
+        (user_id,),
+    )
+    return cursor.fetchone() is not None
+
+
+def deletar_usuario(user_id: int, tipo_num: int) -> str:
+    if usuario_tem_vinculos(user_id):
+        return "possui_vinculos"
+
+    try:
+        cursor.execute(
+            "DELETE FROM usuarios WHERE id_usuario = ? AND tipo = ?",
+            (user_id, tipo_num),
+        )
+        conexao.commit()
+
+        if cursor.rowcount == 1:
+            return "deletado"
+        return "nao_encontrado"
+
+    except IntegrityError:
+        return "possui_vinculos"
+    except Exception:
+        return "erro"

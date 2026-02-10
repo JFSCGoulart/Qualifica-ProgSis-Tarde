@@ -35,6 +35,13 @@ def tratar_retorno_atualizacao(status: str, campo: str):
     match status:
         case "atualizado":
             menu_feedback(f"{campo} atualizado com sucesso!")
+        case "deletado":
+            menu_feedback("Usuário deletado com sucesso!")
+        case "possui_vinculos":
+            menu_feedback(
+                "Não é possível deletar: usuário possui vínculos "
+                "(matriculas e/ou atividades). Remova os vinculos primeiro."
+            )
         case "nao_encontrado":
             menu_feedback("Usuário não encontrado.")
         case "sem_alteracao":
@@ -566,8 +573,10 @@ def remover_usuario(tipo_num: int, label: str) -> None:
             call_to_action_clear()
             break
 
-        confirm = input(f"\nTem certeza que deseja deletar o(a) {label} de ID {user_id}? (s/n): ").strip().lower()
-        
+        confirm = input(
+            f"\nTem certeza que deseja deletar o(a) {label} de ID {user_id}? (s/n): "
+        ).strip().lower()
+
         if confirm not in ("s", "n"):
             menu_feedback("Resposta inválida. Digite 's' para sim ou 'n' para não.")
             call_to_action_clear()
@@ -577,15 +586,8 @@ def remover_usuario(tipo_num: int, label: str) -> None:
             break
 
         if confirm == "s":
-            resultado = deletar_usuario(user_id, tipo_num)
-            
-            if resultado is True:
-                menu_feedback("Usuário deletado com sucesso!")
-            elif resultado is False:
-                menu_feedback("Nenhum usuário encontrado com esse ID.")
-            else:
-                menu_feedback("Erro ao deletar usuário")
-            
+            status = deletar_usuario(user_id, tipo_num)
+            tratar_retorno_atualizacao(status, "Usuário")
             call_to_action_clear()
             break
 
