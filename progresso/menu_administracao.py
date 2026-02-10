@@ -1,26 +1,33 @@
-from progresso.modelos import Aluno, Coordenador, Professor
+from progresso.modelos import Aluno, Coordenador, Professor, password_hash
 
-from progresso.repositorio_usuario import (
+from progresso.repositorio_usuarios import (
     buscar_usuario_por_id_e_tipo,
     buscar_usuario_por_tipo,
     buscar_usuario_por_email,
     buscar_usuario_por_cpf,
+    atualizar_nome,
+    atualizar_email,
+    atualizar_cpf,
+    atualizar_hash,
+    atualizar_tipo,
     deletar_usuario,
     inserir_usuario,
 )
 
+from progresso.repositorio_cursos import listar_cursos, matricular_usuario_em_curso
 from progresso.validadores import formatar_cpf, validar_email
 from progresso.prompts import perguntar
 
 from ui import (
     call_to_action_clear,
     clear,
-    menu_error_success,
+    menu_feedback,
     render_menu_cadastrar_usuario,
-    render_menu_coordenador,
-    render_menu_remover_usuario,
+    render_menu_gerenciar_usuarios,
     render_menu_tipo_usuario,
-    render_menu_visualizar_usuario,
+    render_menu_novo_tipo_usuario,
+    render_usuario_em_edicao,
+    render_menu_editar_usuario
 )
 
 
@@ -544,7 +551,7 @@ def menu_editar_usuario():
                 call_to_action_clear()
                 continue
 
-            
+
 def remover_usuario(tipo_num: int, label: str) -> None:
     user_id = selecionar_usuario_por_id(tipo_num, label)
     if user_id is None:
