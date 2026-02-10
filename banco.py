@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS "usuario_atividade" (
 );
 
 INSERT OR IGNORE INTO usuarios (nome,email,cpf,senha,tipo)
-VALUES ('Admin','coordenacao@escola.br',12345678900,'Adm@8900',2);
+VALUES ('Admin','coordenacao@escola.br',12345678900,'Adm@8900',3);
 """)
 
     conexao.commit()
