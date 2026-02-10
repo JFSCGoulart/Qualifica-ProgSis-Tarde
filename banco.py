@@ -1,6 +1,10 @@
 import sqlite3
 from datetime import date
 
+conexao = sqlite3.connect('banco.db')
+conexao.execute("PRAGMA foreign_keys = ON")
+cursor = conexao.cursor()
+
 def criar_tabela():
     conexao = sqlite3.connect('banco.db')
     cursor = conexao.cursor()
