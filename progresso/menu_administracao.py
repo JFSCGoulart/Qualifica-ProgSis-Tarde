@@ -80,12 +80,12 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
             verificar_email = buscar_usuario_por_email(email)
                 
             if verificar_email:
-                menu_error_success("Email já cadastrado.")
+                menu_feedback("Email já cadastrado.")
                 call_to_action_clear()
                 continue
 
             if not validar_email(email):
-                menu_error_success("Email inválido. Tente novamente.")
+                menu_feedback("Email inválido. Tente novamente.")
                 call_to_action_clear()
                 continue
 
@@ -103,14 +103,14 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
 
             cpf_formatado = formatar_cpf(cpf_raw)
             if cpf_formatado is None:
-                menu_error_success("CPF inválido. Tente novamente.")
+                menu_feedback("CPF inválido. Tente novamente.")
                 call_to_action_clear()
                 continue
 
             verificar_cpf = buscar_usuario_por_cpf(cpf_formatado)
                 
             if verificar_cpf:
-                menu_error_success("CPF já cadastrado.")
+                menu_feedback("CPF já cadastrado.")
                 call_to_action_clear()
                 continue
 
@@ -129,42 +129,83 @@ def cadastrar_usuarios(tipo_cls, tipo_num, label):
                     tipo = tipo_num,
                 )
             except ValueError as e:
-                menu_error_success(str(e))
+                menu_feedback(str(e))
                 call_to_action_clear()
                 continue
 
             resultado = inserir_usuario(novo_user)
 
-            if resultado is True:
+            if isinstance(resultado, int):
+                id_usuario_novo = resultado
                 clear()
-                menu_error_success("Cadastro realizado com sucesso!")
-            elif resultado is False:
+                menu_feedback("Cadastro realizado com sucesso!")
+
+            if tipo_num == 1:
+                cursos = listar_cursos()
+
+                if not cursos:
+                    menu_feedback("Nenhum curso cadastrado. Aluno foi criado sem matrícula.")
+                else:
+                    while True:
+                        print("\nSelecione um curso para matricular o aluno (ou '<' para pular):\n")
+
+                        for i, (_id_curso, nome_curso, horario) in enumerate(cursos, start=1):
+                            print(f"{i}. {nome_curso} (horário: {horario})")
+
+                        escolha = input("\n> ").strip()
+
+                        if escolha == "<":
+                            menu_feedback("Aluno criado sem matrícula.")
+                            break
+
+                        if not escolha.isdigit():
+                            menu_feedback("Opção inválida. Digite um número da lista ou '<'.")
+                            continue
+
+                        idx = int(escolha)
+                        if idx < 1 or idx > len(cursos):
+                            menu_feedback("Opção fora da lista. Tente novamente.")
+                            continue
+
+                        id_curso_escolhido = cursos[idx - 1][0]
+                        status_matricula = matricular_usuario_em_curso(id_usuario_novo, id_curso_escolhido)
+
+                        if status_matricula == "matriculado":
+                            menu_feedback("Aluno matriculado no curso com sucesso!")
+                        elif status_matricula == "ja_matriculado":
+                            menu_feedback("Esse aluno já está matriculado nesse curso.")
+                        else:
+                            menu_feedback("Erro ao matricular o aluno no curso.")
+
+                        break
+
+            elif resultado == "cpf_ou_email_ja_cadastrado":
                 clear()
-                menu_error_success("CPF ou email já cadastrado")
+                menu_feedback("CPF ou email já cadastrado.")
             else:
                 clear()
-                menu_error_success("Erro crítico ao acessar o banco")
+                menu_feedback("Erro crítico ao acessar o banco.")
 
             while True:
                 stop = input(f"\nDeseja adicionar mais {label}s? (s/n): ").strip().lower()
 
-                if stop not in ("s", "n"):
-                    menu_error_success("Resposta inválida. Digite 's' para sim ou 'n' para não.")
-                    call_to_action_clear()
-                    continue
-
-                if stop == "n":
-                    return
-
-                nome = email = cpf_formatado = None
-                step = "nome"
-                break
+                match stop:
+                    case "s":
+                        nome = email = cpf_formatado = None
+                        step = "nome"
+                        break
+                    case "n":
+                        return
+                    case _:
+                        menu_feedback("Resposta inválida. Digite 's' para sim ou 'n' para não.")
+                        call_to_action_clear()
+                        continue
 
 
 def menu_cadastrar_usuarios():
     while True:
         clear()
-        render_menu_tipo_usuario()
+        render_menu_tipo_usuario("CADASTRAR")
         escolha = input("> ").strip()
 
         match escolha:
@@ -180,7 +221,7 @@ def menu_cadastrar_usuarios():
             case "4":
                 return
             case _:
-                menu_error_success("Opção inválida.")
+                menu_feedback("Opção inválida.")
                 call_to_action_clear()
                 continue
 
