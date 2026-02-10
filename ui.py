@@ -36,7 +36,7 @@ def menu_subtitulo(name):
 def render_menu_coordenador():
     menu_title("COORDENADOR")
     menu_subtitulo("O que você quer fazer?")
-    menu_option("1", "Cadastrar novo aluno")
+    menu_option("1", "Gerenciar usuários")
     menu_option("2", "Ver ranking por turma")
     menu_option("3", "Ver total de atividades de hoje")
     menu_option("4", "Ver desempenho por curso")
