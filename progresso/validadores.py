@@ -1,5 +1,6 @@
 import re
 
+
 def formatar_cpf(cpf: str) -> str | None:
     numeros = re.sub(r"\D", "", cpf)
 

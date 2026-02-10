@@ -1,6 +1,10 @@
-from banco import conexao, cursor
-from progresso.modelos import password_hash
+import sqlite3
 from sqlite3 import IntegrityError
+
+from progresso.modelos import password_hash
+
+conexao = sqlite3.connect('banco.db')
+cursor = conexao.cursor()
 
 
 def inserir_usuario(usuario) -> int | str | None:
