@@ -9,7 +9,7 @@ def clear():
         os.system("clear")
 
 
-def menu_error_success(text):
+def menu_feedback(text):
     print(f"\n{text}")
 
 
@@ -29,48 +29,77 @@ def menu_option(number, name):
     print(f"{number}. {name}")
 
 
-def single_option(name):
+def menu_subtitulo(name):
     print(f"\n{name}")
 
 
 def render_menu_coordenador():
-    menu_title("GERENCIAMENTO DE USUÁRIOS")
-    single_option("Escolha uma opção:")
-    menu_option("1", "Cadastrar novo usuário")
-    menu_option("2", "Visualizar usuários")
-    menu_option("3", "Remover usuário")
-    menu_option("4", "Sair")
+    menu_title("COORDENADOR")
+    menu_subtitulo("O que você quer fazer?")
+    menu_option("1", "Cadastrar novo aluno")
+    menu_option("2", "Ver ranking por turma")
+    menu_option("3", "Ver total de atividades de hoje")
+    menu_option("4", "Ver desempenho por curso")
+    menu_option("5", "Sair")
 
 
-def render_menu_tipo_usuario():
-    menu_title("SELECIONAR TIPO DE USUÁRIO")
-    single_option("Selecione o tipo de usuário:")
+def render_menu_escolha_curso(titulo):
+    menu_title(titulo)
+    menu_subtitulo("Escolha o curso:")
+    menu_option("1", "Matemática")
+    menu_option("2", "Português")
+    menu_option("3", "História")
+    menu_option("4", "Geografia")
+    menu_option("5", "Ciências")
+    menu_option("6", "Voltar")
+
+
+def render_menu_gerenciar_usuarios():
+    menu_title("USUÁRIOS")
+    menu_subtitulo("O que você quer fazer?")
+    menu_option("1", "Cadastrar")
+    menu_option("2", "Visualizar")
+    menu_option("3", "Editar")
+    menu_option("4", "Remover")
+    menu_option("5", "Voltar")
+
+
+def render_menu_tipo_usuario(operacao):
+    menu_title(f"{operacao} USUÁRIO")
+    menu_subtitulo("Escolha uma opção:")
     menu_option("1", "Aluno")
     menu_option("2", "Professor")
     menu_option("3", "Coordenador")
     menu_option("4", "Voltar")
 
+def render_menu_novo_tipo_usuario():
+    menu_subtitulo("Escolha o novo tipo de usuário:")
+    menu_option("1", "Aluno")
+    menu_option("2", "Professor")
+    menu_option("3", "Coordenador")
+    menu_option("4", "Voltar")
+
+def render_usuario_em_edicao(user_id, label, usuario):
+    _id, nome, email, cpf, tipo = usuario
+
+    menu_title("EDITAR USUÁRIO")
+    print(f"\nID: {user_id} | Tipo: {label}")
+    print(f"Nome: {nome}")
+    print(f"Email: {email}")
+    print(f"CPF: {cpf}")
+
+def render_menu_editar_usuario():
+    menu_subtitulo("O que você quer editar?")
+    menu_option("1", "Nome")
+    menu_option("2", "Email")
+    menu_option("3", "CPF")
+    menu_option("4", "Senha")
+    menu_option("5", "Tipo")
+    menu_option("6", "Voltar")
+
 
 def render_menu_cadastrar_usuario(tipo):
     menu_title(f"CADASTRAR {tipo}")
-    single_option(
+    menu_subtitulo(
         "Antes de começar, tenha em mãos o nome completo, CPF e e-mail do usuário."
     )
-
-
-def render_menu_visualizar_usuario():
-    menu_title("VISUALIZAR USUÁRIO")
-    single_option("Escolha uma opção:")
-    menu_option("1", "Lista de alunos")
-    menu_option("2", "Lista de professores")
-    menu_option("3", "Lista de coordenadores")
-    menu_option("4", "Voltar")
-
-
-def render_menu_remover_usuario():
-    menu_title("DELETAR USUÁRIO")
-    single_option("Escolha uma opção:")
-    menu_option("1", "Alunos")
-    menu_option("2", "Professores")
-    menu_option("3", "Coordenadores")
-    menu_option("4", "Voltar")
