@@ -1,6 +1,6 @@
 from progresso.modelos import Aluno, Coordenador, Professor
 
-from progresso.repositorio import (
+from progresso.repositorio_usuario import (
     buscar_usuario_por_id_e_tipo,
     buscar_usuario_por_tipo,
     buscar_usuario_por_email,

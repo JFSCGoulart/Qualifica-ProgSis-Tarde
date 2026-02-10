@@ -1,6 +1,6 @@
 from getpass import getpass
 
-from progresso.repositorio import (
+from progresso.repositorio_usuario import (
     buscar_usuario_por_email,
     buscar_usuario_por_cpf,
     atualizar_hash,
