@@ -44,7 +44,7 @@ Uma plataforma web desenvolvida em Python para gestão de cursos, acompanhamento
 
 ### 📂 Descrição das Pastas e Arquivos
 
-
+```text
 Projeto final qualifica/
 │
 ├── data/
@@ -66,8 +66,7 @@ Projeto final qualifica/
 │── docs/
 ├
 └── README.md
-
-
+```
 
 Adaptado para desenvolvimento Web no **VS Code**:
 
