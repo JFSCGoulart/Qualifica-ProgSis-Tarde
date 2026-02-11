@@ -48,6 +48,41 @@ Tecnologias utilizadas
 
 "Lógica: O Script em Phyton foi utilizado para realizar a lógica da aplicação, processamento de dados, consulta ao banco de dados, controle de seção e etc."
 
+Diretório library
+def criar_tabela(): Criar todas as tabelas do banco de dados
+def cpf_existe(): Checa se o cpf inserido existe dentro do banco de dados
+def email_existe(): Checa se o e-mail inserido existe dentro do banco de dados
+def cadastrar_usuario(): Adicionar um novo usuário e suas informações no banco de dados (id_usuario,nome,email,cpf,senha,tipo)
+def adicionar_curso(): Adicionar um novo curso e suas informações no banco de dados (id_curso, nome, horario)
+def listar_cursos(): Listar todos os cursos existentes no banco de dados
+def curso_existe(): Checagem se o curso existe dentro do banco de dados
+def adicionar_atividade(): Adiciona atividade dentro do banco de dados, junto com suas informações (questao,a,b,c,d,dica,gabarito,id_curso)
+def ranking_parcial(): Mostra o ranking dos 3 melhores alunos do curso
+def ranking_total(): Mostra o ranking de todos os alunos do curso
+def lista_atividades(): Lista todas as atividades existentes do curso
+def mostrar_atividade(): Mostra todas as informações da atividade
+def pedir_dica(): Mostra a dica da atividade para o aluno
+def realizar_atividade(): Coloca dentro do banco de dados que o aluno fez a atividade, se acertou e quando.
+def atividade_feita(): Checa se a atividade já foi feita pelo aluno
+def repetir_atividade(): Permitir que o aluno refaça a atividade sem ganhar novamente estrelas
+def progresso_diario(): Mostra o progresso diário em curso específico
+def progresso_total(): Mostra o progresso total em curso específico
+def progresso_cursos(): Mostra o progresso diário do aluno em todos os seus cursos
+def progresso_alunos(): Mostra o progresso diário de todos os alunos por curso
+def desempenho_curso(): Mostra o desempenho de acertos por curso
+def deletar_atividade(): Deleta uma atividade do banco de dados
+def resetar_progresso(): Marca todas as atividades do aluno como não feitas, mantendo ainda a pontuação de estrelas recebidas
+def checar_senha(): Checa se a senha existe dentro do banco de dados
+def login(): Inicia o login básico de usuário, podendo especificar seu tipo e inserir suas informações.
+def repetir
+def menu_usuário(): Base do menu de aluno,professor, e coordenador, permitindo acessar as suas opções respectivas
+def menu_lista(): Base do menu da lista de cursos, possibilitando selecionar cursos ou opções exclusivas por tipo de usuário.
+def menu_curso(): Base do menu de curso, permitindo acessar as opções específicas para cada tipo de usuário
+def checar_uc(): Checa se o usuário está no curso.
+def menu_progresso(): Menu específico para ver progresso no curso, e poder resetá-lo
+def menu_atividade(): Menu específico para poder realizar a atividade ou pedir dicas.
+
+Código de criação de tabelas
 
     CREATE TABLE IF NOT EXISTS "usuarios" (
         "id_usuario" INTEGER NOT NULL UNIQUE,
